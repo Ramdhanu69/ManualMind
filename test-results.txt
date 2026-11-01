@@ -1,0 +1,18 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0
+django: version: 5.2.18, settings: manualmind.settings (from ini)
+rootdir: C:\codes\mrit
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.9.0, django-4.14.0
+collected 46 items
+
+tests\test_api.py .............                                          [ 28%]
+tests\test_citations.py ....                                             [ 36%]
+tests\test_ingestion.py ...........                                      [ 60%]
+tests\test_permissions.py ........                                       [ 78%]
+tests\test_retrieval.py .....                                            [ 89%]
+tests\test_citations.py ....                                             [ 97%]
+tests\test_ingestion.py .                                                [100%]
+
+============================= 46 passed in 15.46s =============================

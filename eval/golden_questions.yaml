@@ -1,0 +1,128 @@
+# Golden question set for `python manage.py eval_rag`.
+#
+# These questions measure the system; they are never special-cased in app code.
+# Judges will ask unseen questions, so the only thing tuned from these results is
+# RETRIEVAL_MIN_SCORE and the system prompt.
+questions:
+  - machine: M-HP200
+    question: What does E17 mean?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: HP-OPS-01
+        pages: [2]
+    must_include: ["low hydraulic pressure", "110 bar"]
+
+  - machine: M-AC90
+    question: What does E17 mean?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: AC-OM-01
+        pages: [2]
+    must_include: ["high discharge temperature"]
+
+  - machine: M-HP200
+    question: What is the normal operating pressure range?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: HP-OPS-01
+        pages: [1]
+    must_include: ["120", "140"]
+
+  - machine: M-AC90
+    question: What is the normal operating pressure range?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: AC-OM-01
+        pages: [1]
+    must_include: ["7.0", "8.0"]
+
+  - machine: M-HP200
+    question: How often is the filter checked?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: HP-MNT-01
+        pages: [2]
+    must_include: ["50", "RF-20"]
+
+  - machine: M-AC90
+    question: How often should the AF-10 filter indicator be checked, and when is the planned filter replacement due?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: AC-OM-01
+        pages: [3]
+    must_include: ["100", "600"]
+
+  - machine: M-HP200
+    question: What triggers E17 and what should be inspected first?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: HP-OPS-01
+        pages: [2]
+      - document_id: HP-MNT-01
+        pages: [3]
+    must_include: ["110 bar", "reservoir"]
+
+  - machine: M-HP200
+    question: What does E31 mean?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: HP-OPS-01
+        pages: [2]
+    must_include: ["guard"]
+
+  - machine: M-AC90
+    question: What does E31 mean?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: AC-OM-01
+        pages: [2]
+    must_include: ["condensate"]
+
+  - machine: M-HP200
+    question: Oil has been in service 12 months but only 1,400 hours. Is replacement due?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: HP-MNT-01
+        pages: [2]
+    must_include: ["12 months"]
+
+  - machine: M-AC90
+    question: What should be recorded before escalation?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: AC-OM-01
+        pages: [3]
+    must_include: ["M-AC90"]
+
+  - machine: M-HP200
+    question: Can the assistant approve return to service?
+    expected_status: ANSWERED
+    expected_documents:
+      - document_id: HP-MNT-01
+        pages: [3]
+    must_include: ["supervisor"]
+
+  - machine: M-HP200
+    question: When is the AF-10 filter replaced?
+    expected_status: INSUFFICIENT_EVIDENCE
+    note: AF-10 belongs to the AC-90, not the HP-200.
+
+  - machine: M-AC90
+    question: What is the H46 oil replacement interval?
+    expected_status: INSUFFICIENT_EVIDENCE
+    note: H46 oil belongs to the HP-200, not the AC-90.
+
+  - machine: M-HP200
+    question: What is the pump replacement price?
+    expected_status: INSUFFICIENT_EVIDENCE
+    note: Prices are explicitly not provided by the dataset.
+
+  - machine: M-AC90
+    question: What is the tightening torque for the motor mount?
+    expected_status: INSUFFICIENT_EVIDENCE
+    note: Torques are explicitly not provided by the dataset.
+
+  - machine: M-HP200
+    question: What is the capital of France?
+    expected_status: INSUFFICIENT_EVIDENCE
+    note: Out of scope; the assistant must not answer from general knowledge.
