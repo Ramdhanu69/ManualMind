@@ -1,0 +1,42 @@
+services:
+  db:
+    # The pgvector image is used so VECTOR_BACKEND=pgvector is available on request,
+    # but the default numpy backend never needs the extension to be enabled.
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-manualmind}
+      POSTGRES_USER: ${POSTGRES_USER:-manualmind}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-manualmind}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-manualmind}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    env_file: .env
+    environment:
+      POSTGRES_HOST: db
+    volumes:
+      - .:/app
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Enabled in Phase 2 for Celery (async ingestion and visual inspection jobs).
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+
+volumes:
+  postgres_data:
+  media_data:

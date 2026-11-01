@@ -1,0 +1,107 @@
+:root {
+  --mm-ink: #1b2430;
+  --mm-steel: #2f4157;
+  --mm-line: #d7dde5;
+  --mm-amber: #a8700a;
+  --mm-amber-bg: #fdf6e3;
+}
+
+body {
+  background: #f4f6f9;
+  color: var(--mm-ink);
+}
+
+.mm-navbar {
+  background: var(--mm-steel);
+}
+
+.mm-navbar .navbar-brand,
+.mm-navbar .nav-link,
+.mm-username {
+  color: #f2f5f8;
+}
+
+.mm-navbar .nav-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.mm-role-badge {
+  background: #16263a;
+  color: #e9eef4;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.mm-safety-banner {
+  background: var(--mm-amber-bg);
+  border-bottom: 1px solid #e8d9b0;
+  color: var(--mm-amber);
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+}
+
+.mm-card {
+  border: 1px solid var(--mm-line);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.mm-card > .card-header {
+  background: #eef1f5;
+  border-bottom: 1px solid var(--mm-line);
+  font-weight: 600;
+}
+
+.mm-machine-pill {
+  background: #16263a;
+  border-radius: 999px;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+}
+
+.mm-source-card {
+  border: 1px solid var(--mm-line);
+  border-left: 4px solid var(--mm-steel);
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.mm-quote {
+  background: #fff8dc;
+  border-left: 3px solid #d9b94c;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  padding: 0.6rem 0.75rem;
+  white-space: pre-wrap;
+}
+
+.mm-page-thumb {
+  border: 1px solid var(--mm-line);
+  cursor: zoom-in;
+  width: 100%;
+}
+
+.mm-mono-small {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+}
+
+.mm-example-question {
+  text-align: left;
+  white-space: normal;
+}
+
+.mm-empty {
+  color: #6b7785;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.mm-table td,
+.mm-table th {
+  vertical-align: middle;
+}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Not allowed - {{ app_name }}{% endblock %}
+{% block content %}
+<div class="card mm-card">
+  <div class="card-body">
+    <h1 class="h5">This page needs the {{ needed }} role</h1>
+    <p class="text-body-secondary mb-0">
+      You are signed in as <strong>{{ user.username }}</strong> with the role
+      <strong>{{ user_role|default:"none" }}</strong>. Access is checked on the server,
+      so changing the page will not grant it.
+    </p>
+  </div>
+</div>
+{% endblock %}
