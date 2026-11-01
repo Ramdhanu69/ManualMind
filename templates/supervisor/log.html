@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Question log - {{ app_name }}{% endblock %}
+{% block content %}
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-log" type="button">
+      Question log
+    </button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-gaps" type="button" id="gaps-tab">
+      Knowledge gaps
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content pt-3">
+  <div class="tab-pane fade show active" id="tab-log">
+    <div class="card mm-card">
+      <div class="card-header">All questions (read only)</div>
+      <div class="card-body pb-0">
+        <div class="row g-2 align-items-end">
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="f-machine">Machine</label>
+            <select class="form-select" id="f-machine">
+              <option value="">All machines</option>
+              {% for machine in machines %}
+                <option value="{{ machine.machine_id }}">{{ machine.machine_id }} - {{ machine.model }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="f-status">Status</label>
+            <select class="form-select" id="f-status">
+              <option value="">All statuses</option>
+              {% for state in statuses %}
+                <option value="{{ state }}">{{ state }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12 col-md-2">
+            <label class="form-label" for="f-search">Text</label>
+            <input class="form-control" id="f-search" placeholder="E17">
+          </div>
+          <div class="col-6 col-md-1">
+            <label class="form-label" for="f-from">From</label>
+            <input class="form-control" id="f-from" type="date">
+          </div>
+          <div class="col-6 col-md-1">
+            <label class="form-label" for="f-to">To</label>
+            <input class="form-control" id="f-to" type="date">
+          </div>
+          <div class="col-12 col-md-2">
+            <button class="btn btn-primary w-100" id="f-apply">Apply</button>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive mt-3">
+        <table class="table table-sm table-hover mm-table mb-0">
+          <thead>
+            <tr><th>When</th><th>Machine</th><th>User</th><th>Question</th><th>Status</th><th class="text-end">Time</th></tr>
+          </thead>
+          <tbody id="h-rows"></tbody>
+        </table>
+      </div>
+      <div class="mm-empty d-none" id="h-empty">No questions match these filters.</div>
+    </div>
+    <div id="h-detail" class="mt-4"></div>
+  </div>
+
+  <div class="tab-pane fade" id="tab-gaps">
+    <div class="row g-3" id="gaps-summary"></div>
+    <div id="gaps-groups" class="mt-3"></div>
+    <div class="mm-empty d-none" id="gaps-empty">
+      No unanswered questions recorded. Every question so far was answerable from the manuals.
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mm-page-modal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title h6" id="mm-page-modal-title"></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img alt="Cited manual page" class="img-fluid" id="mm-page-modal-image">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>window.MM_HISTORY_SHOW_USER = true;</script>
+<script src="{% static 'js/history.js' %}"></script>
+<script src="{% static 'js/gaps.js' %}"></script>
+{% endblock %}
