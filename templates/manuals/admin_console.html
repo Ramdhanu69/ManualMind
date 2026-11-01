@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block title %}Machines and manuals - {{ app_name }}{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-xl-5">
+    <div class="card mm-card mb-4">
+      <div class="card-header">Register a machine</div>
+      <div class="card-body">
+        <form id="mm-machine-form">
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="form-label" for="m-machine-id">Machine ID</label>
+              <input class="form-control" id="m-machine-id" placeholder="M-HP200" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="m-model">Model</label>
+              <input class="form-control" id="m-model" placeholder="HP-200" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="m-name">Name</label>
+              <input class="form-control" id="m-name" placeholder="Hydraulic forming press" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="m-plant">Plant</label>
+              <input class="form-control" id="m-plant" value="PLANT-1" required>
+            </div>
+          </div>
+          <button class="btn btn-primary mt-3" type="submit">Register machine</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card mm-card">
+      <div class="card-header">Upload a manual</div>
+      <div class="card-body">
+        <form id="mm-upload-form">
+          <div class="mb-2">
+            <label class="form-label" for="u-machine">Machine</label>
+            <select class="form-select" id="u-machine" required>
+              {% for machine in machines %}
+                <option value="{{ machine.machine_id }}">{{ machine.machine_id }} - {{ machine.model }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="row g-2">
+            <div class="col-6">
+              <label class="form-label" for="u-document-id">Document ID</label>
+              <input class="form-control" id="u-document-id" placeholder="HP-OPS-01" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="u-revision">Revision</label>
+              <input class="form-control" id="u-revision" placeholder="1.0" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="u-title">Title</label>
+              <input class="form-control" id="u-title" placeholder="HP-200 Operations Manual" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="u-file">PDF file</label>
+              <input class="form-control" id="u-file" type="file" accept="application/pdf" required>
+            </div>
+          </div>
+          <button class="btn btn-primary mt-3" type="submit" id="mm-upload-button">Upload and index</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-xl-7">
+    <div class="card mm-card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Manuals</span>
+        <button class="btn btn-sm btn-outline-secondary" id="mm-refresh">Refresh</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm mm-table mb-0">
+          <thead>
+            <tr>
+              <th>Document</th><th>Machine</th><th>Rev</th><th>Status</th>
+              <th class="text-end">Pages</th><th class="text-end">Chunks</th><th>Active</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="mm-manual-rows"></tbody>
+        </table>
+      </div>
+      <div class="mm-empty d-none" id="mm-manual-empty">
+        No manuals yet. Upload a PDF to index it.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const manualRows = document.getElementById("mm-manual-rows");
+const manualEmpty = document.getElementById("mm-manual-empty");
+
+function manualRow(manual) {
+  const failure = manual.error_message
+    ? '<div class="text-danger small">' + mmEscape(manual.error_message) + "</div>"
+    : "";
+  return (
+    "<tr>" +
+    '<td><div class="fw-semibold">' + mmEscape(manual.document_id) + "</div>" +
+    '<div class="text-body-secondary small">' + mmEscape(manual.title) + "</div></td>" +
+    '<td class="mm-mono-small">' + mmEscape(manual.machine_id) + "</td>" +
+    "<td>" + mmEscape(manual.revision) + "</td>" +
+    "<td>" + mmStatusBadge(manual.status) + failure + "</td>" +
+    '<td class="text-end">' + manual.page_count + "</td>" +
+    '<td class="text-end">' + manual.chunk_count + "</td>" +
+    "<td>" + (manual.is_active ? "Yes" : "No") + "</td>" +
+    '<td class="text-end text-nowrap">' +
+    '<a class="btn btn-sm btn-outline-secondary" target="_blank" href="/api/v1/manuals/' +
+    manual.id + '/pdf/">PDF</a> ' +
+    '<button class="btn btn-sm btn-outline-primary" data-reindex="' + manual.id +
+    '">Reindex</button></td>' +
+    "</tr>"
+  );
+}
+
+async function loadManuals() {
+  const manuals = await mmFetch("/api/v1/manuals/");
+  manualRows.innerHTML = manuals.map(manualRow).join("");
+  manualEmpty.classList.toggle("d-none", manuals.length > 0);
+}
+
+manualRows.addEventListener("click", async (event) => {
+  const id = event.target.dataset.reindex;
+  if (!id) return;
+  event.target.disabled = true;
+  try {
+    const result = await mmFetch("/api/v1/manuals/" + id + "/reindex/", { method: "POST" });
+    mmToast(result.manual.document_id + ": " + result.manual.status, "success");
+    await loadManuals();
+  } catch (failure) {
+    mmToast(failure.message);
+  } finally {
+    event.target.disabled = false;
+  }
+});
+
+document.getElementById("mm-refresh").addEventListener("click", () => {
+  loadManuals().catch((failure) => mmToast(failure.message));
+});
+
+document.getElementById("mm-machine-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  try {
+    const machine = await mmFetch("/api/v1/machines/", {
+      method: "POST",
+      body: {
+        machine_id: document.getElementById("m-machine-id").value.trim(),
+        model: document.getElementById("m-model").value.trim(),
+        name: document.getElementById("m-name").value.trim(),
+        plant: document.getElementById("m-plant").value.trim(),
+      },
+    });
+    mmToast("Machine " + machine.machine_id + " registered.", "success");
+    window.location.reload();
+  } catch (failure) {
+    mmToast(failure.message);
+  }
+});
+
+document.getElementById("mm-upload-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = document.getElementById("mm-upload-button");
+  const file = document.getElementById("u-file").files[0];
+  if (!file) return;
+
+  const body = new FormData();
+  body.append("machine", document.getElementById("u-machine").value);
+  body.append("document_id", document.getElementById("u-document-id").value.trim());
+  body.append("title", document.getElementById("u-title").value.trim());
+  body.append("revision", document.getElementById("u-revision").value.trim());
+  body.append("file", file);
+
+  button.disabled = true;
+  button.textContent = "Indexing...";
+  try {
+    const result = await mmFetch("/api/v1/manuals/", { method: "POST", body });
+    const manual = result.manual;
+    if (result.created) {
+      mmToast(
+        manual.document_id + ": " + manual.status + " (" + manual.page_count +
+          " pages, " + manual.chunk_count + " chunks)",
+        manual.status === "INDEXED" ? "success" : "danger"
+      );
+    } else {
+      mmToast(manual.document_id + " was already indexed. Nothing changed.", "secondary");
+    }
+    await loadManuals();
+  } catch (failure) {
+    mmToast(failure.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Upload and index";
+  }
+});
+
+loadManuals().catch((failure) => mmToast(failure.message));
+</script>
+{% endblock %}
