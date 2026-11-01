@@ -1,0 +1,13 @@
+ROUND 1 STUDENT PACK
+
+1. Read Round1_Student_Challenge_Brief.pdf. An editable Word copy is also included.
+2. Use machine_manual_index.csv for registration metadata. It contains three manual records for two machines.
+3. Upload and index only the three PDF files under Manuals.
+4. Each manual has three pages. Use one-based PDF page numbers; these match the printed page labels.
+5. Both HP-200 manuals are complementary current references. Machine selection must restrict retrieval.
+6. Equipment, brands, specifications, and procedures are fictional training material. Do not use them on actual equipment.
+7. Model access and college rules for coding assistance are announced separately. No credentials or solution code are included.
+8. Development: Day 1, 12:00 PM to 6:30 PM. Evaluation: 7:00 PM to 10:00 PM. No elimination after Round 1.
+
+Package version: 1.0
+Prepared by Blessed IT Solution Pvt Ltd

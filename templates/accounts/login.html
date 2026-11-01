@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Sign in - {{ app_name }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-5 col-lg-4">
+    <div class="card mm-card">
+      <div class="card-body">
+        <h1 class="h4 mb-1">{{ app_name }}</h1>
+        <p class="text-body-secondary small mb-4">Manufacturing manual assistant</p>
+        <form id="mm-login-form" novalidate>
+          <div class="mb-3">
+            <label class="form-label" for="username">Username</label>
+            <input class="form-control" id="username" name="username" autocomplete="username" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input class="form-control" id="password" name="password" type="password" autocomplete="current-password" required>
+          </div>
+          <div class="alert alert-danger d-none" id="mm-login-error" role="alert"></div>
+          <button class="btn btn-primary w-100" type="submit">Sign in</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById("mm-login-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const error = document.getElementById("mm-login-error");
+  error.classList.add("d-none");
+  try {
+    await mmFetch("/api/v1/auth/login", {
+      method: "POST",
+      body: {
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+      },
+    });
+    window.location.href = "/";
+  } catch (failure) {
+    error.textContent = failure.message;
+    error.classList.remove("d-none");
+  }
+});
+</script>
+{% endblock %}
