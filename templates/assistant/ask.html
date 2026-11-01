@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Ask - {{ app_name }}{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-xl-8">
+    <div class="card mm-card">
+      <div class="card-body">
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+          <div>
+            <label class="form-label mb-1" for="mm-machine">Machine</label>
+            <select class="form-select" id="mm-machine" required>
+              {% for machine in machines %}
+                <option value="{{ machine.machine_id }}" data-model="{{ machine.model }}">
+                  {{ machine.machine_id }} - {{ machine.model }} ({{ machine.name }})
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="pt-4">
+            <span class="mm-machine-pill" id="mm-machine-pill">No machine selected</span>
+          </div>
+        </div>
+
+        <label class="form-label" for="mm-question">Maintenance question</label>
+        <textarea class="form-control" id="mm-question" rows="3"
+                  placeholder="What does E17 mean?"></textarea>
+
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          {% for question in example_questions %}
+            <button class="btn btn-sm btn-outline-secondary mm-example-question"
+                    data-question="{{ question }}">{{ question }}</button>
+          {% endfor %}
+        </div>
+
+        <button class="btn btn-primary mt-3" id="mm-ask-button">Ask</button>
+        <span class="text-body-secondary small ms-2" id="mm-timing"></span>
+      </div>
+    </div>
+
+    <div class="alert alert-info mt-3 d-none" id="mm-hint" role="alert"></div>
+
+    <div class="card mm-card mt-3 d-none" id="mm-answer-card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Answer</span>
+        <span id="mm-answer-status"></span>
+      </div>
+      <div class="card-body">
+        <p class="mb-3" id="mm-answer-text"></p>
+        <div class="d-none" id="mm-escalation-block">
+          <h2 class="h6">Record before escalation</h2>
+          <ul class="list-unstyled" id="mm-escalation-list"></ul>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="h6 mt-4 d-none" id="mm-sources-heading">Sources</h2>
+    <div id="mm-sources"></div>
+  </div>
+
+  <div class="col-12 col-xl-4">
+    <div class="card mm-card">
+      <div class="card-header">How an answer is grounded</div>
+      <div class="card-body small text-body-secondary">
+        <p>Retrieval is restricted to the selected machine inside the database query,
+           so another machine cannot contribute a passage.</p>
+        <p>Every quote shown below is copied from the stored manual text, and a
+           citation is only displayed if its passage was actually retrieved.</p>
+        <p class="mb-0">If the manuals do not cover the question, the assistant
+           reports insufficient evidence instead of guessing.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mm-page-modal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title h6" id="mm-page-modal-title"></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img alt="Cited manual page" class="img-fluid" id="mm-page-modal-image">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/ask.js' %}"></script>
+{% endblock %}

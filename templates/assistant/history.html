@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My history - {{ app_name }}{% endblock %}
+{% block content %}
+<div class="card mm-card">
+  <div class="card-header">My questions</div>
+  <div class="card-body pb-0">
+    <div class="row g-2 align-items-end">
+      <div class="col-12 col-md-3">
+        <label class="form-label" for="f-machine">Machine</label>
+        <select class="form-select" id="f-machine">
+          <option value="">All machines</option>
+          {% for machine in machines %}
+            <option value="{{ machine.machine_id }}">{{ machine.machine_id }} - {{ machine.model }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-12 col-md-3">
+        <label class="form-label" for="f-search">Search question text</label>
+        <input class="form-control" id="f-search" placeholder="E17">
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label" for="f-from">From</label>
+        <input class="form-control" id="f-from" type="date">
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label" for="f-to">To</label>
+        <input class="form-control" id="f-to" type="date">
+      </div>
+      <div class="col-12 col-md-2">
+        <button class="btn btn-primary w-100" id="f-apply">Apply</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive mt-3">
+    <table class="table table-sm table-hover mm-table mb-0">
+      <thead>
+        <tr><th>When</th><th>Machine</th><th>Question</th><th>Status</th><th class="text-end">Time</th></tr>
+      </thead>
+      <tbody id="h-rows"></tbody>
+    </table>
+  </div>
+  <div class="mm-empty d-none" id="h-empty">No questions match these filters yet.</div>
+</div>
+
+<div id="h-detail" class="mt-4"></div>
+
+<div class="modal fade" id="mm-page-modal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title h6" id="mm-page-modal-title"></h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img alt="Cited manual page" class="img-fluid" id="mm-page-modal-image">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>window.MM_HISTORY_SHOW_USER = false;</script>
+<script src="{% static 'js/history.js' %}"></script>
+{% endblock %}
