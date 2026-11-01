@@ -1,18 +1,68 @@
+ManualMind test run
+Sun, Nov  1, 2026 10:02:55 PM
+
+python 3.11.4
+django 5.2.18
+database PostgreSQL 16.4
+vector_backend numpy
+embedding fake fake-hash-384 384
+llm fake fake-llm
+retrieval_min_score 0.1
+
 ============================= test session starts =============================
-platform win32 -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0
+platform win32 -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\mukhe\AppData\Local\Programs\Python\Python311\python.exe
 django: version: 5.2.18, settings: manualmind.settings (from ini)
 rootdir: C:\codes\mrit
 configfile: pytest.ini
 testpaths: tests
 plugins: anyio-4.9.0, django-4.14.0
-collected 46 items
+collecting ... collected 46 items
 
-tests\test_api.py .............                                          [ 28%]
-tests\test_citations.py ....                                             [ 36%]
-tests\test_ingestion.py ...........                                      [ 60%]
-tests\test_permissions.py ........                                       [ 78%]
-tests\test_retrieval.py .....                                            [ 89%]
-tests\test_citations.py ....                                             [ 97%]
-tests\test_ingestion.py .                                                [100%]
+tests/test_api.py::test_health_reports_the_active_backends PASSED        [  2%]
+tests/test_api.py::test_login_logout_and_me PASSED                       [  4%]
+tests/test_api.py::test_login_with_a_bad_password_is_rejected PASSED     [  6%]
+tests/test_api.py::test_manual_list_filters_by_machine PASSED            [  8%]
+tests/test_api.py::test_ask_returns_the_shape_the_ask_page_renders PASSED [ 10%]
+tests/test_api.py::test_ask_for_an_unknown_machine_is_404 PASSED         [ 13%]
+tests/test_api.py::test_knowledge_gaps_group_unanswered_questions PASSED [ 15%]
+tests/test_api.py::test_knowledge_gaps_are_not_visible_to_an_engineer PASSED [ 17%]
+tests/test_api.py::test_pages_render_for_the_right_role[/admin-console/-administrator] PASSED [ 19%]
+tests/test_api.py::test_pages_render_for_the_right_role[/ask/-engineer] PASSED [ 21%]
+tests/test_api.py::test_pages_render_for_the_right_role[/history/-engineer] PASSED [ 23%]
+tests/test_api.py::test_pages_render_for_the_right_role[/supervisor/log/-supervisor] PASSED [ 26%]
+tests/test_api.py::test_pages_refuse_the_wrong_role PASSED               [ 28%]
+tests/test_citations.py::test_fabricated_quote_keeps_the_citation_but_marks_it_unverified PASSED [ 30%]
+tests/test_citations.py::test_answered_with_no_valid_chunk_id_is_downgraded PASSED [ 32%]
+tests/test_citations.py::test_every_ask_is_persisted_with_its_citations PASSED [ 34%]
+tests/test_citations.py::test_insufficient_evidence_from_the_model_is_recorded PASSED [ 36%]
+tests/test_ingestion.py::test_page_numbers_are_one_based PASSED          [ 39%]
+tests/test_ingestion.py::test_chunks_never_cross_a_page PASSED           [ 41%]
+tests/test_ingestion.py::test_reuploading_an_identical_file_is_a_no_op PASSED [ 43%]
+tests/test_ingestion.py::test_a_non_pdf_with_a_pdf_extension_is_rejected PASSED [ 45%]
+tests/test_ingestion.py::test_a_new_revision_supersedes_the_previous_one PASSED [ 47%]
+tests/test_ingestion.py::test_superseded_revisions_are_not_retrieved PASSED [ 50%]
+tests/test_ingestion.py::test_pdf_serving_requires_login PASSED          [ 52%]
+tests/test_ingestion.py::test_page_preview_returns_png_for_a_valid_page PASSED [ 54%]
+tests/test_ingestion.py::test_page_preview_rejects_out_of_range_pages PASSED [ 56%]
+tests/test_ingestion.py::test_page_preview_requires_login PASSED         [ 58%]
+tests/test_ingestion.py::test_failed_ingestion_is_recorded_not_raised PASSED [ 60%]
+tests/test_permissions.py::test_engineer_cannot_upload_manual PASSED     [ 63%]
+tests/test_permissions.py::test_supervisor_cannot_upload_manual PASSED   [ 65%]
+tests/test_permissions.py::test_anonymous_cannot_upload_manual PASSED    [ 67%]
+tests/test_permissions.py::test_administrator_can_upload_manual PASSED   [ 69%]
+tests/test_permissions.py::test_supervisor_cannot_ask PASSED             [ 71%]
+tests/test_permissions.py::test_engineer_cannot_read_another_engineers_query PASSED [ 73%]
+tests/test_permissions.py::test_supervisor_can_read_every_query PASSED   [ 76%]
+tests/test_permissions.py::test_only_administrator_can_create_a_machine PASSED [ 78%]
+tests/test_retrieval.py::test_retrieval_excludes_other_machine PASSED    [ 80%]
+tests/test_retrieval.py::test_same_code_gives_a_different_answer_per_machine PASSED [ 82%]
+tests/test_retrieval.py::test_numpy_backend_needs_no_database_extension PASSED [ 84%]
+tests/test_retrieval.py::test_low_score_retrieval_refuses_without_calling_the_llm PASSED [ 86%]
+tests/test_retrieval.py::test_question_about_another_machine_gets_a_hint_without_leaking PASSED [ 89%]
+tests/test_citations.py::test_exact_quote_is_verified PASSED             [ 91%]
+tests/test_citations.py::test_whitespace_and_dash_differences_still_verify PASSED [ 93%]
+tests/test_citations.py::test_paraphrase_falls_back_to_stored_text PASSED [ 95%]
+tests/test_citations.py::test_invented_chunk_id_is_dropped PASSED        [ 97%]
+tests/test_ingestion.py::test_validate_upload_rejects_an_oversized_file PASSED [100%]
 
-============================= 46 passed in 15.46s =============================
+============================= 46 passed in 14.44s =============================
